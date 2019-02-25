@@ -1,0 +1,16 @@
+{
+	"name": "ScpBot",
+	"version": "1.0.0",
+	"description": "Gives scp wiki links",
+	"main": "bot.js",
+	"author": "Dawn",
+	"dependencies": {
+		"cheerio": "^1.0.0-rc.2",
+		"discord.io": "github:woor/discord.io#gateway_v6",
+		"discord.js": "^11.4.2",
+		"mongodb": "^3.1.13",
+		"request": "^2.88.0",
+		"winston": "^3.2.1",
+		"winston-mongodb": "^4.0.3"
+	}
+}
