@@ -227,8 +227,8 @@ bot.on('message', async message => {
 		message.channel.send({embed});
 	}
 
-  else if (command == 'tunnel_snakes'){
-    message.channel.send('RULE!!');
+  else if (command == 'gregg_rulz'){
+    message.channel.send('ok');
   }
 
   else{
