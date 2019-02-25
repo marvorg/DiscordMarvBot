@@ -72,15 +72,15 @@ bot.on('message', async message => {
 
   var server = message.guild.id;
   var prefix = config.prefix
-  
+
   if(message.content.charAt(0) != prefix) return;
-  
+
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
-  
+
   console.log(command)
   console.log(command == 'help')
-  
+
   if(command == 'scp') {
     var num = args[0]
     if (num == 'random'){
@@ -89,7 +89,7 @@ bot.on('message', async message => {
     var link = 'http://www.scp-wiki.net/scp-' + num
     var text = ''
 		var scpnum = 'Link -> SCP-' + num
-    
+
     request(link, function(error,response,html){
       if (!error && response.statusCode == 200){
         const $ = cheerio.load(html);
@@ -99,9 +99,9 @@ bot.on('message', async message => {
           }
 
           text = text+$(this).text()+'\n\n'
-				
+
 				});
-	  			
+
 				// are we longer than 2000 chars?
 	  		if (text.length >= 2000) {
 	    		// yup. Lets truncate to 1997 and add some fancy elipsis!
@@ -128,10 +128,10 @@ bot.on('message', async message => {
       } else{
 				text = "Unknown Error"
 			}
-		
+
 			if (text == null){
 				message.channel.send('That scp doesn\'t exist, use `help` for info on the command');
-        
+
 			} else{
 				var embed = {
 					"title": scpnum,
@@ -160,7 +160,7 @@ bot.on('message', async message => {
 			message.channel.send({embed});
 		}
 	}
-  
+
   else if (command == 'help') {
 		var embed = {
 			"title":"Commands List",
@@ -193,7 +193,7 @@ bot.on('message', async message => {
 		};
 		message.channel.send({embed});
   }
-  
+
   else if (command == 'ping') {
     const m = await message.channel.send('Ping?');
     m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
@@ -226,6 +226,10 @@ bot.on('message', async message => {
 		};
 		message.channel.send({embed});
 	}
+
+  else if (command == 'tunnel_snakes'){
+    message.channel.send('RULE!!');
+  }
 
   else{
     message.channel.send('Thats not a valid command, use `help` to view commands.');
