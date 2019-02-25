@@ -6,6 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Look in Folder
+          name: Transfer Files
           command: |
-            ls
+            scp ./bot.js $USERNAME@$SERVER:/home/marv/
+            scp ./package.json $USERNAME@$SERVER:/home/marv/
+      - run:
+          name: Deploy
+          command: |
+            ssh -t $USERNAME@$SERVER "/home/marv/deploy.sh"
