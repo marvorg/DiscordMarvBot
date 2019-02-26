@@ -134,6 +134,7 @@ bot.on('message', async message => {
     if (num == 'random'){
       num = String(Math.floor(Math.random()*(4999-001+1)+001)).padStart(3,'0')
     }
+    var link = 'http://www.scp-wiki.net/scp-' + num
 
     var scpnum = 'Link -> SCP-' + num
 
@@ -259,27 +260,23 @@ bot.on('message', async message => {
   else if (command == 'tales'){
     var input = message.content.split('%tales')[1].trim()
     if(input && input.length >= 2){
-      var entries = 0
-      request('http://www.scp-wiki.net/tales-by-title', function(error,response,html){
-        entries++
-      })
       request('http://www.scp-wiki.net/tales-by-title', function(error,response,html){
         if (!error && response.statusCode == 200){
           var re = new RegExp(".*" + input + ".*", "gmi")
           const $ = cheerio.load(html);
-          var entries = 0
           var hasEntry = false
+          var entries = 0
+
           $( "#page-content td" ).each(function(i) {
             entries++
           });
+
           if(input != 'random'){
             $( "#page-content td" ).each(function(i) {
               var title = $(this).children('a').eq(0).text()
-              var text = ''
               if(re.test(title)){
                 console.log('found a match! Title is: '+title+'\nAnd input is: '+input)
                 var link = 'http://www.scp-wiki.net'+$(this).children('a').eq(0).attr('href')
-
 
                 fetchEntry(link, false, title)
                 hasEntry = true
@@ -290,7 +287,30 @@ bot.on('message', async message => {
               message.channel.send('That tale doesn\'t exist, use `help` for info on the command');
             }
           }else{
-
+            var attempt = 0
+            function fetchRandomTale(){
+              var randNum = Math.floor(Math.random()*(entries-1+1)+1)
+              $( "#page-content td" ).each(function(i) {
+                var entry = $(this).children('a').eq(0)
+                if(i == randNum){
+                  var title = entry.text()
+                  var link = 'http://www.scp-wiki.net'+entry.attr('href')
+                  if(title && link){
+                    fetchEntry(link, false, title)
+                  }else{
+                    console.log('not a valid entry, trying again!')
+                    if(attempt < 5){
+                      attempt++
+                      fetchRandomTale()
+                    }else{
+                      message.channel.send('Couldn\'t fetch a random entry! PANIC! AHHH!!!');
+                    }
+                  }
+                  return false;
+                }
+              });
+            }
+            fetchRandomTale()
           }
         };
       })
