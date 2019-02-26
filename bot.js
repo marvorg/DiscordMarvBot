@@ -352,7 +352,7 @@ bot.on('message', async message => {
 
 });
 
-bot.on('disconnected', functionn() {
+bot.on('disconnected', function() {
   bot.login(config.token);
 });
 
