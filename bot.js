@@ -352,4 +352,8 @@ bot.on('message', async message => {
 
 });
 
+bot.on('disconnected', functionn() {
+  bot.login(config.token);
+});
+
 bot.login(config.token);
