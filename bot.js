@@ -207,6 +207,10 @@ bot.on('message', async message => {
         "value":"Used as `scp x` where x is the scp number."
       },
       {
+        "name":"tales",
+        "value":"Used as `tales x` where x is the title. Supports partial titles ex: `%tales bearl-ly thought` will return `A Bear-ly Thought Out Plan`"
+      },
+      {
         "name":"001",
         "value":"Links all the 001 proposals"
       },
@@ -217,52 +221,112 @@ bot.on('message', async message => {
       {
         "name":"ping",
         "value":"Returns the bots ping in ms."
-      }
-    ]
-  };
-  message.channel.send({embed});
-}
+      }]
+    };
+    message.channel.send({embed});
+  }
 
-else if (command == 'ping') {
-  const m = await message.channel.send('Ping?');
-  m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-}
+  else if (command == 'ping') {
+    const m = await message.channel.send('Ping?');
+    m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
+  }
 
-else if (command == 'info') {
-  var embed = {
-    "title":"Info",
-    "author":{
-      "name":"Marv"
-    },
-    "color": 5577355,
-    "fields": [{
-      "name":"Guilds",
-      "value":bot.guilds.size
-    },
-    {
-      "name":"Channels",
-      "value":bot.channels.size
-    },
-    {
-      "name":"Users",
-      "value":bot.users.size
-    },
-    {
-      "name":"Support server",
-      "value":"https://discord.gg/NEXPCJz"
+  else if (command == 'info') {
+    var embed = {
+      "title":"Info",
+      "author":{
+        "name":"Marv"
+      },
+      "color": 5577355,
+      "fields": [{
+        "name":"Guilds",
+        "value":bot.guilds.size
+      },
+      {
+        "name":"Channels",
+        "value":bot.channels.size
+      },
+      {
+        "name":"Users",
+        "value":bot.users.size
+      },
+      {
+        "name":"Support server",
+        "value":"https://discord.gg/NEXPCJz"
+      }]
+    };
+    message.channel.send({embed});
+  }
+
+  else if (command == 'gregg_rulz'){
+    message.channel.send('ok');
+  }
+
+  else if (command == 'tales'){
+    var input = message.content.split('%tales')[1].trim()
+    if(input && input.length >= 2){
+      var entries = 0
+      request('http://www.scp-wiki.net/tales-by-title', function(error,response,html){
+        entries++
+      })
+      request('http://www.scp-wiki.net/tales-by-title', function(error,response,html){
+        if (!error && response.statusCode == 200){
+          var re = new RegExp(".*" + input + ".*", "gmi")
+          const $ = cheerio.load(html);
+          var entries = 0
+          var hasEntry = false
+          $( "#page-content td" ).each(function(i) {
+            entries++
+          });
+          $( "#page-content td" ).each(function(i) {
+            var title = $(this).children('a').eq(0).text()
+            var text = ''
+            if(re.test(title)){
+              console.log('found a match! Title is: '+title+'\nAnd input is: '+input)
+              var link = 'http://www.scp-wiki.net'+$(this).children('a').eq(0).attr('href')
+
+              request(link, function(error,response,html){
+                if (!error && response.statusCode == 200){
+                  const $ = cheerio.load(html);
+                  $( "#page-content p" ).each(function(i) {
+                    if (i == 5) {
+                      return false;
+                    }
+                    text = text+$(this).text()+'\n\n'
+                  });
+                  // are we longer than 2000 chars?
+                  if (text.length >= 2000) {
+                    // yup. Lets truncate to 1997 and add some fancy elipsis!
+                    text = text.substr(0, 1997)+'...'
+                  }
+
+                  var embed = {
+                    "title": title,
+                    "description": text,
+                    "url": link,
+                    "color": 5577355,
+                    "author": {
+                      "name": "Marv"
+                    }
+                  };
+                  message.channel.send({embed});
+                };
+              })
+              hasEntry = true
+              return false;
+            }
+          });
+          if(!hasEntry){
+            message.channel.send('That tale doesn\'t exist, use `help` for info on the command');
+          }
+        };
+      })
     }
-  ]
-};
-message.channel.send({embed});
-}
+  }
 
-else if (command == 'gregg_rulz'){
-  message.channel.send('ok');
-}
-
-else{
-  message.channel.send('Thats not a valid command, use `help` to view commands.');
-}
+  else{
+    message.channel.send('Thats not a valid command, use `help` to view commands.');
+  }
 
 });
 
