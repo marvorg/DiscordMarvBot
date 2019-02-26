@@ -7,6 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 const { createLogger, format, transports } = require('winston');
 require('winston-mongodb');
 const bot = new Discord.Client();
+const si = require('systeminformation');
 
 // this is our winston logger obj
 logger = createLogger({
@@ -315,6 +316,43 @@ bot.on('message', async message => {
         };
       })
     }
+  }
+
+  else if (command == 'sysinfo'){
+    function uptimeCount(seconds){
+    	var days = Math.floor(seconds / 86400);
+    	var hours = Math.floor((seconds % 86400) / 3600);
+    	var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+    	var seconds = ((seconds % 86400) % 3600) % 60;
+
+    	return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+    }
+
+    function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
+
+    si.mem(function(data) {
+      var total_mem = formatBytes(data.total)
+      var avail_mem = formatBytes(data.available)
+      si.currentLoad(function(data){
+        var cur_load = data.currentload
+        var avg_load = data.avgload
+
+        var embed = {
+          "description": " \
+            **Server Uptime:** "+uptimeCount(si.time().uptime)+" \n \n \
+            **Available Memory:** "+avail_mem+" \n \
+            **Total Memory:** "+total_mem+" \n \n\
+            **Average Load:** "+avg_load+" \n \
+            **Current Load:** "+cur_load+" \n \
+          ",
+          "color": 5577355,
+          "author": {
+            "name": "Marv"
+          }
+        };
+        message.channel.send({embed});
+      })
+    })
   }
 
   else{
