@@ -81,25 +81,21 @@ bot.on('message', async message => {
   console.log(command)
   console.log(command == 'help')
 
-  if(command == 'scp') {
-    var num = args[0]
-    if (num == 'random'){
-      num = String(Math.floor(Math.random()*(4999-001+1)+001)).padStart(3,'0')
-    }
-    var link = 'http://www.scp-wiki.net/scp-' + num
-    var text = ''
-    var scpnum = 'Link -> SCP-' + num
 
+  function fetchEntry(link, num, title){
+    var text = ''
+    var title = title
     request(link, function(error,response,html){
       if (!error && response.statusCode == 200){
         const $ = cheerio.load(html);
         $( "#page-content p" ).each(function(i) {
-          if ((i == 5)||(i == 2 && num == '001')) {
+          if (num && num == '001' && i == 2){
+            return false
+          }
+          if (i == 5) {
             return false;
           }
-
           text = text+$(this).text()+'\n\n'
-
         });
 
         // are we longer than 2000 chars?
@@ -107,22 +103,6 @@ bot.on('message', async message => {
           // yup. Lets truncate to 1997 and add some fancy elipsis!
           text = text.substr(0, 1997)+'...'
         }
-
-        logger.log({
-          level: 'info',
-          message: 'Fetching Entry!',
-          meta: {
-            type:'fetch',
-            guild_name: message.guild.name,
-            guild_id: message.guild.id,
-            scp_num: num,
-            text: text,
-            error:error,
-            status_code: response.statusCode,
-            date: new Date()
-          }
-        });
-
       } else if (error == null){
         text = error
       } else{
@@ -131,10 +111,12 @@ bot.on('message', async message => {
 
       if (text == null){
         message.channel.send('That scp doesn\'t exist, use `help` for info on the command');
-
       } else{
+        if(!title){
+          title = 'Link -> SCP-' + num
+        }
         var embed = {
-          "title": scpnum,
+          "title": title,
           "description": text,
           "url": link,
           "color": 5577355,
@@ -145,6 +127,18 @@ bot.on('message', async message => {
         message.channel.send({embed});
       }
     });
+  }
+
+  if(command == 'scp') {
+    var num = args[0]
+    if (num == 'random'){
+      num = String(Math.floor(Math.random()*(4999-001+1)+001)).padStart(3,'0')
+    }
+
+    var scpnum = 'Link -> SCP-' + num
+
+    fetchEntry(link, num, '')
+
   }
 
   else if (command == '001'){
@@ -278,46 +272,25 @@ bot.on('message', async message => {
           $( "#page-content td" ).each(function(i) {
             entries++
           });
-          $( "#page-content td" ).each(function(i) {
-            var title = $(this).children('a').eq(0).text()
-            var text = ''
-            if(re.test(title)){
-              console.log('found a match! Title is: '+title+'\nAnd input is: '+input)
-              var link = 'http://www.scp-wiki.net'+$(this).children('a').eq(0).attr('href')
+          if(input != 'random'){
+            $( "#page-content td" ).each(function(i) {
+              var title = $(this).children('a').eq(0).text()
+              var text = ''
+              if(re.test(title)){
+                console.log('found a match! Title is: '+title+'\nAnd input is: '+input)
+                var link = 'http://www.scp-wiki.net'+$(this).children('a').eq(0).attr('href')
 
-              request(link, function(error,response,html){
-                if (!error && response.statusCode == 200){
-                  const $ = cheerio.load(html);
-                  $( "#page-content p" ).each(function(i) {
-                    if (i == 5) {
-                      return false;
-                    }
-                    text = text+$(this).text()+'\n\n'
-                  });
-                  // are we longer than 2000 chars?
-                  if (text.length >= 2000) {
-                    // yup. Lets truncate to 1997 and add some fancy elipsis!
-                    text = text.substr(0, 1997)+'...'
-                  }
 
-                  var embed = {
-                    "title": title,
-                    "description": text,
-                    "url": link,
-                    "color": 5577355,
-                    "author": {
-                      "name": "Marv"
-                    }
-                  };
-                  message.channel.send({embed});
-                };
-              })
-              hasEntry = true
-              return false;
+                fetchEntry(link, false, title)
+                hasEntry = true
+                return false;
+              }
+            });
+            if(!hasEntry){
+              message.channel.send('That tale doesn\'t exist, use `help` for info on the command');
             }
-          });
-          if(!hasEntry){
-            message.channel.send('That tale doesn\'t exist, use `help` for info on the command');
+          }else{
+
           }
         };
       })
