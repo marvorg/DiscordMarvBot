@@ -320,15 +320,6 @@ bot.on('message', async message => {
   }
 
   else if (command == 'sysinfo'){
-    function uptimeCount(seconds){
-    	var days = Math.floor(seconds / 86400);
-    	var hours = Math.floor((seconds % 86400) / 3600);
-    	var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
-    	var seconds = ((seconds % 86400) % 3600) % 60;
-
-    	return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-    }
-
     function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
 
     si.mem(function(data) {
@@ -340,7 +331,6 @@ bot.on('message', async message => {
 
         var embed = {
           "description": " \
-            **Server Uptime:** "+uptimeCount(os.uptime())+" \n \n \
             **Available Memory:** "+avail_mem+" \n \
             **Total Memory:** "+total_mem+" \n \n\
             **Average Load:** "+avg_load+" \n \
@@ -348,7 +338,7 @@ bot.on('message', async message => {
           ",
           "color": 5577355,
           "author": {
-            "name": "Marv"
+            "name": "Diag-Marv-stics"
           }
         };
         message.channel.send({embed});
