@@ -8,6 +8,7 @@ const { createLogger, format, transports } = require('winston');
 require('winston-mongodb');
 const bot = new Discord.Client();
 const si = require('systeminformation');
+var os = require('os');
 
 // this is our winston logger obj
 logger = createLogger({
@@ -339,7 +340,7 @@ bot.on('message', async message => {
 
         var embed = {
           "description": " \
-            **Server Uptime:** "+uptimeCount(si.time().uptime)+" \n \n \
+            **Server Uptime:** "+uptimeCount(os.uptime())+" \n \n \
             **Available Memory:** "+avail_mem+" \n \
             **Total Memory:** "+total_mem+" \n \n\
             **Average Load:** "+avg_load+" \n \
