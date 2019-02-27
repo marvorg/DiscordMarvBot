@@ -108,7 +108,8 @@ bot.on('message', async message => {
 });
 
 bot.on('disconnected', function() {
-  bot.login(process.env.DISCORD_TOKEN);
+  const exec = require("child_process").exec
+  exec("restart dawn")
 });
 
 bot.login(process.env.DISCORD_TOKEN);
