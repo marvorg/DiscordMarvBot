@@ -31,6 +31,10 @@ bot.on('message', async message => {
     prefix = '%'
   }
 
+  if (message.isMentioned(bot.user)) {
+    message.channel.send('Your prefix is: '+prefix);
+  }
+
   if(message.content.substring(0, prefix.length) != prefix) return;
 
   var args = message.content.slice(prefix.length).trim().split(/ +/g);
