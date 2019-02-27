@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const config = require('./config.json');
 const bot = new Discord.Client();
 
 function activity(){
@@ -29,7 +28,7 @@ bot.on('message', async message => {
   if(settings.findOne({_id:message.guild.id})){
     prefix = settings.findOne({_id:message.guild.id}).prefix
   }else{
-    prefix = config.prefix
+    prefix = '%'
   }
 
   if(message.content.substring(0, prefix.length) != prefix) return;
@@ -105,7 +104,7 @@ bot.on('message', async message => {
 });
 
 bot.on('disconnected', function() {
-  bot.login(config.token);
+  bot.login(process.env.DISCORD_TOKEN);
 });
 
-bot.login(config.token);
+bot.login(process.env.DISCORD_TOKEN);
