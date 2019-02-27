@@ -17,7 +17,7 @@ fetchSCP = function(num, callback){
       .setAuthor('Marv')
       .setURL(data.link)
     }else{
-      embed = "We couldn't find what you're looking for!"
+      embed = "That SCP doesnt exist, use `help` for more info on the command"
     }
 
     callback(embed)

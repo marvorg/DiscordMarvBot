@@ -32,7 +32,7 @@ bot.on('message', async message => {
     prefix = config.prefix
   }
 
-  if(message.content.charAt(0) != prefix) return;
+  if(message.content.slice(prefix.length) != prefix) return;
 
   var args = message.content.slice(prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
@@ -59,16 +59,20 @@ bot.on('message', async message => {
   }
 
   else if (command == "change_prefix"){
-    var new_prefix = args[0]
-    // do we already have a prefix?
-    if(settings.findOne({_id:message.guild.id})){
-      // lets update it
-      settings.update({_id:message.guild.id}, {$set:{prefix:new_prefix}})
+    if(message.member.hasPermission("MANAGE_GUILD")) {
+      var new_prefix = args[0]
+      // do we already have a prefix?
+      if(settings.findOne({_id:message.guild.id})){
+        // lets update it
+        settings.update({_id:message.guild.id}, {$set:{prefix:new_prefix}})
+      }else{
+        // nop lets insert it
+        settings.insert({_id:message.guild.id, prefix:new_prefix})
+      }
+      message.channel.send("Prefix set to: "+new_prefix);
     }else{
-      // nop lets insert it
-      settings.insert({_id:message.guild.id, prefix:new_prefix})
+      message.channel.send("You need the manage guild permission to use that command!")
     }
-    message.channel.send("Prefix set to: "+new_prefix);
   }
 
   else if (command == 'info'){
