@@ -32,7 +32,7 @@ bot.on('message', async message => {
     prefix = config.prefix
   }
 
-  if(message.content.slice(prefix.length) != prefix) return;
+  if(message.content.substring(0, prefix.length) != prefix) return;
 
   var args = message.content.slice(prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
