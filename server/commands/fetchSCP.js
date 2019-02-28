@@ -16,6 +16,11 @@ fetchSCP = function(num, callback){
       .setColor(5577355)
       .setAuthor('Marv')
       .setURL(data.link)
+
+      if(data.image){
+        embed.setThumbnail(data.image)
+      }
+
     }else{
       embed = "That SCP doesnt exist, use `help` for more info on the command"
     }

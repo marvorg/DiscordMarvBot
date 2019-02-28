@@ -64,6 +64,9 @@ bot.on('message', async message => {
   else if (command == "change_prefix"){
     if(message.member.hasPermission("MANAGE_GUILD")) {
       var new_prefix = args[0]
+      if(new_prefix.length >= 500){
+        new_prefix = new_prefix.substring(0, 500)
+      }
       // do we already have a prefix?
       if(settings.findOne({_id:message.guild.id})){
         // lets update it
@@ -101,6 +104,10 @@ bot.on('message', async message => {
     })
   }
 
+  else if (command == 'gregg_rulz'){
+    message.channel.send('ok')
+  }
+
   else{
     message.channel.send('Thats not a valid command, use `help` to view commands.');
   }
@@ -109,7 +116,7 @@ bot.on('message', async message => {
 
 bot.on('disconnected', function() {
   const exec = require("child_process").exec
-  exec("restart dawn")
+  exec("restart marv")
 });
 
 bot.login(process.env.DISCORD_TOKEN);

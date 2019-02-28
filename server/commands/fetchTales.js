@@ -65,6 +65,10 @@ fetchTales = function(input, callback){
             .setAuthor('Marv')
             .setURL(data.link)
 
+            if(data.image){
+              embed.setThumbnail(data.image)
+            }
+
             callback(embed)
           })
         }else{
