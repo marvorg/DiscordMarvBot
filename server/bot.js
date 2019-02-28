@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+const DBL = require("dblapi.js");
+const dbl = new DBL(process.env.BOTLIST_TOKEN, bot);
 
 function activity(){
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`)
@@ -8,6 +10,10 @@ function activity(){
 bot.on('ready', () => {
   console.log(`Started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers`);
   activity();
+
+  setInterval(() => {
+    dbl.postStats(bot.guilds.size);
+  }, 1800000);
 });
 
 bot.on('guildCreate', guild => {
