@@ -11,11 +11,11 @@ fetchSCP = function(num, callback){
     var embed = ''
     if(data != 'fail'){
       embed = new RichEmbed()
-      .setTitle([data.title](data.link))
+      .setTitle(data.title)
       .setDescription(data.description)
       .setColor(5577355)
       .setAuthor('Marv')
-      
+      .setURL(data.url)
 
       if(data.image){
         embed.setThumbnail(data.image)
