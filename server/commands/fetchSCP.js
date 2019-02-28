@@ -15,7 +15,7 @@ fetchSCP = function(num, callback){
       .setDescription(data.description)
       .setColor(5577355)
       .setAuthor('Marv')
-      .setURL(data.link)
+      .setURL(link)
 
       if(data.image){
         embed.setThumbnail(data.image)
