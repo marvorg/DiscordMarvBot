@@ -13,6 +13,7 @@ fetchHelp = function(callback){
   .addField("info", "Displays information about the bot such as amount of users")
   .addField("ping", "Returns the bots ping in ms")
   .addField("change_prefix", "Changes the bots prefix. Used as `change_prefix x` where x is the desired prefix")
+  .addField("random", "both `scp` and `tales` support `random`. Used as `scp random` or `tales random`")
 
   callback(embed)
 }
