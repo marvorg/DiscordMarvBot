@@ -22,4 +22,6 @@
 
 
 ## I need help!
-We have a [support server](https://discord.gg/NEXPCJz) setup!  
+Forget your prefix? Just ping marv ( @Marv ) and he'll let you know! For everything else we have a [support server](https://discord.gg/NEXPCJz) setup!  
+
+Don't forget to vote for us on [DiscordBots](https://discordbots.org/bot/538173713162567690)!
