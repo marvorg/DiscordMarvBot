@@ -3,10 +3,12 @@ const bot = new Discord.Client();
 const DBL = require("dblapi.js");
 const dbl = new DBL(process.env.BOTLIST_TOKEN, bot);
 
+// Sets bots activity to display amount of servers
 function activity(){
   bot.user.setActivity(`Serving ${bot.guilds.size} servers`)
 }
 
+// Commands will only run after this
 bot.on('ready', () => {
   console.log(`Started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers`);
   activity();
@@ -28,6 +30,8 @@ bot.on('guildDelete', guild => {
 });
 
 bot.on('message', async message => {
+
+  // Prevents replies to other bots
   if(message.author.bot) return;
   var prefix = ''
 
@@ -41,6 +45,7 @@ bot.on('message', async message => {
     message.channel.send('Your prefix is: '+prefix);
   }
 
+  // Prevents replies to un-prefixed messages
   if(message.content.substring(0, prefix.length) != prefix) return;
 
   var args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -61,13 +66,13 @@ bot.on('message', async message => {
   }
 
   else if (command == '001'){
-    if (args[0] == null) {
-      var proposals = fetchProposals()
-      message.channel.send(proposals);
-    }
+    var proposals = fetchProposals()
+    message.channel.send(proposals);
   }
 
   else if (command == "change_prefix"){
+
+    // Prevents certain users from changing the prefix in a server
     if(message.member.hasPermission("MANAGE_GUILD")) {
       var new_prefix = args[0]
       if(new_prefix.length >= 500){
@@ -94,6 +99,7 @@ bot.on('message', async message => {
   }
 
   else if (command == 'ping') {
+    // Finds ping by checking when the 'Ping?' message is sent against when the command message was sent
     const m = await message.channel.send('Ping?');
     m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
   }
@@ -120,6 +126,7 @@ bot.on('message', async message => {
 
 });
 
+// Restarts on a full disconnect
 bot.on('disconnected', function() {
   const exec = require("child_process").exec
   exec("restart marv")
