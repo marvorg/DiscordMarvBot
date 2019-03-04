@@ -4,6 +4,8 @@ fetchSCP = function(num, callback){
   var attempt = 0
   var isRandom = false
   fetch(num)
+
+  // Recursive function to have a health check for random, and lower the chance it fails to find an SCP entry
   function fetch(num){
     if (num == 'random'){
       isRandom = true
@@ -27,15 +29,19 @@ fetchSCP = function(num, callback){
         }
 
       }else{
-        embed = "That SCP doesnt exist, use `help` for more info on the command"
+
         if(attempt <= 5 && isRandom){
           fetch('random')
           attempt++
           return false
+
+        }else{
+          embed = "That SCP doesnt exist, use `help` for more info on the command"
         }
       }
 
       callback(embed)
     })
   }
+
 }
