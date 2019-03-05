@@ -20,12 +20,13 @@ bot.on('ready', () => {
 
 bot.on('guildCreate', guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). With ${guild.membercount} members`);
+  logGuild('Added to Guild!', guild, 'added')
   activity();
 });
 
 bot.on('guildDelete', guild => {
   console.log(`Removed from: ${guild.name} (id: ${guild.id})`);
-  logGuild('Removed from Guild!', guild)
+  logGuild('Removed from Guild!', guild, 'removed')
   activity();
 });
 
@@ -128,6 +129,7 @@ bot.on('message', async message => {
 
 // Restarts on a full disconnect
 bot.on('disconnected', function() {
+  logDisconnect()
   const exec = require("child_process").exec
   exec("restart marv")
 });

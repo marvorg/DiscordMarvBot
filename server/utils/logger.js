@@ -18,15 +18,26 @@ logger = createLogger({
   exitOnError: false, // do not exit on handled exceptions
 });
 
-logGuild = function(what, guild){
+logGuild = function(what, guild, type){
   logger.log({
     level: 'info',
     message: what,
     meta: {
-      type:'added',
+      type: type,
       guild_name: guild.name,
       guild_id: guild.id,
       guild_member_count: guild.membercount,
+      date: new Date()
+    }
+  });
+}
+
+logDisconnect = function(){
+  logger.log({
+    level: 'warn',
+    message: 'Discord Bot Restarted',
+    meta: {
+      type: 'restart',
       date: new Date()
     }
   });
