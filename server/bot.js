@@ -134,4 +134,6 @@ bot.on('disconnected', function() {
   exec("restart marv")
 });
 
+bot.on('error', console.error);
+
 bot.login(process.env.DISCORD_TOKEN);
