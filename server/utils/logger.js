@@ -8,7 +8,7 @@ logger = createLogger({
   ),
   transports: [
     new transports.MongoDB({
-      db: 'mongodb://localhost:27017/marv',
+      db: process.env.MONGO_URL,
       capped: true,
       collection: 'winstonLogs',
       handleExceptions: true,
