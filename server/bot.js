@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const DBL = require("dblapi.js");
 const dbl = new DBL(process.env.BOTLIST_TOKEN, bot);
+const { RichEmbed } = require('discord.js');
 
 // Sets bots activity to display amount of servers
 function activity(){
@@ -119,6 +120,25 @@ bot.on('message', async message => {
 
   else if (command == 'gregg_rulz'){
     message.channel.send('ok')
+  }
+
+  else if (command == 'generate'){
+    var input = message.content.split('generate')[1].trim()
+
+    var embed = shortPreProcessing(message)
+    const m = await message.channel.send(embed[1]);
+
+    if(embed[0] != 'fail'){
+      generateShort(input, function(data){
+        m.delete();
+        if(data){
+          message.channel.send('Hey <@'+embed[2]+'> Heres your story!')
+          message.channel.send(data)
+        }else{
+          message.channel.send('Error: Must be a number ( up to 5 digits )')
+        }
+      })
+    }
   }
 
   else{
