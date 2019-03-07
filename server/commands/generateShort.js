@@ -49,7 +49,7 @@ shortPreProcessing = function(message){
   }else{
     calls = ratelimit.findOne({_id:server}).calls
   }
-  if(calls < 4){
+  if(calls < 5){
     ratelimit.update({_id:server}, {$inc:{calls:1}})
     var size = 0
     var gen_time = []
@@ -75,6 +75,6 @@ shortPreProcessing = function(message){
     .addField("Estimated Wait:", timeConverter(average * (size+1))+'\n\nI\'ll ping you when your story is ready!')
     return ['ok', embed, message.author.id]
   }else{
-    return ['fail', "You have reached your servers limit for generating stories! To ensure each server has a chance to generate a story, we've setup a ratelimit that resets every 30 minutes. The current ratelimit is 5."]
+    return ['fail', "You have reached your servers limit for generating stories! To ensure each server has a chance to generate a story, we've setup a rate-limit that resets every 30 minutes. The current rate-limit is 5."]
   }
 }
