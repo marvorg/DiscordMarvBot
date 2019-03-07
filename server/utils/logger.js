@@ -42,3 +42,16 @@ logDisconnect = function(){
     }
   });
 }
+
+logRatelimit = function(message){
+  logger.log({
+    level: 'warn',
+    message: 'A server reached the rate-limit!',
+    meta: {
+      server_name: message.guild.name,
+      server_id: message.guild.id,
+      type: 'rateLimit',
+      date: new Date()
+    }
+  });
+}

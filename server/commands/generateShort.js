@@ -75,6 +75,7 @@ shortPreProcessing = function(message){
     .addField("Estimated Wait:", timeConverter(average * (size+1))+'\n\nI\'ll ping you when your story is ready!')
     return ['ok', embed, message.author.id]
   }else{
+    logRatelimit(message)
     return ['fail', "You have reached your servers limit for generating stories! To ensure each server has a chance to generate a story, we've setup a rate-limit that resets every 30 minutes. The current rate-limit is 5."]
   }
 }
