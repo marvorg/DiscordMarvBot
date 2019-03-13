@@ -150,8 +150,12 @@ bot.on('message', async message => {
 // Restarts on a full disconnect
 bot.on('disconnected', function() {
   logDisconnect()
-  const exec = require("child_process").exec
-  exec("restart marv")
+  console.log('disconnected!')
+  bot.login(process.env.DISCORD_TOKEN).catch(function(err){
+    console.log('failed to reconnect!')
+    const exec = require("child_process").exec
+    exec("restart marv")
+  })
 });
 
 bot.on('error', console.error);
