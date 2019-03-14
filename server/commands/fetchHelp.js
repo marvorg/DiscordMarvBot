@@ -29,7 +29,7 @@ fetchHelp = function(page, callback){
     embed = new RichEmbed()
     .setTitle('Commands List: moderation')
     .setAuthor('Marv')
-    .setDescription('Usage is shown with each command')
+    .setDescription('Usage is shown with each command, these commands require the manage server permission to use')
     .setColor(5577355)
     .addField('change_prefix', 'Changes Marvs prefix for your server. Used as `change_prefix x` where x is the desired prefix. Supports multi-character prefixes.')
     .addField('kick', 'Kicks a specified user. Used as `kick user reason`, reason is optional, user must be a mention (@user) of the user you want to kick.')
