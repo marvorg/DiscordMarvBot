@@ -6,7 +6,7 @@ const { RichEmbed } = require('discord.js');
 
 // Sets bots activity to display amount of servers
 function activity(){
-  bot.user.setActivity(`Serving ${bot.guilds.size} servers`)
+  bot.user.setActivity(`Serving ${bot.guilds.size} servers | %help`)
 }
 
 // Commands will only run after this
@@ -138,6 +138,82 @@ bot.on('message', async message => {
           message.channel.send('Error: Must be a number ( up to 5 digits )')
         }
       })
+    }
+  }
+
+  else if (command == 'purge'){
+    var amount = ''
+    var type
+    var user = message.mentions.users.first()
+    var ment
+    var userID
+    if(message.member.hasPermission("MANAGE_GUILD")){
+      if (Number(args[0]) == 'NaN'){
+        message.channel.send('First arg of `purge` should be a number')
+      } else {
+        amount = parseInt(args[0])
+        if (amount > 100){
+          message.channel.send('Can only delete up to 100 messages')
+        } else {
+          if (args[1]){
+            if (args[1] == 'image' || args[1] == 'img' || args[1] == 'bot'){
+              type = args[1]
+              console.log(type, args[1])
+            } else if (user) {
+              ment = message.guild.member(user)
+              userID = ment.id
+            } else {
+              message.channel.send('Second arg should be `image, img, bot` or a user mention')
+            }
+            if (args[2]){
+              if (args[2] == 'image' || args[1] == 'img' || args[1] == 'bot'){
+                type = args[2]
+              } else if (user){
+                ment = message.guild.member(user)
+              } else {
+                message.channel.send('Third arg should be `image, img, bot` or a user mention')
+              }
+            }
+          }
+        }
+      }
+      purge(amount, type, userID, message, function(data){
+        if (data == 'base'){
+          message.channel.bulkDelete(amount)
+        } else {
+          if (data.size > 1){
+            message.channel.bulkDelete(data)
+          } else if (data.size == 1){
+            data[0].delete()
+          } else {
+            message.channel.send('No messages found for purging')
+          }
+        }
+      })
+    } else {
+      message.channel.send('You need the manage guild permission to use that command!')
+    }
+  }
+
+  else if (command == 'kick'){
+    if(message.member.hasPermission("MANAGE_GUILD")){
+      var user = message.mentions.users.first()
+      var check = message.guild.member(user)
+      if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
+        message.channel.send(`You can't kick that member`)
+      } else {
+        args.shift()
+        var reason = args.join()
+        if (!user){
+          message.channel.send('Please specify a user to kick.')
+        } else {
+          kickMember(check, reason, function(data){
+            message.channel.send(data)
+          })
+        }
+      }
+    } else {
+      message.channel.send('You need the manage guild permission to use that command!')
     }
   }
 
