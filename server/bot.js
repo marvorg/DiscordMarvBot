@@ -166,10 +166,11 @@ bot.on('message', async message => {
               message.channel.send('Second arg should be `image, img, bot` or a user mention')
             }
             if (args[2]){
-              if (args[2] == 'image' || args[1] == 'img' || args[1] == 'bot'){
+              if (args[2] == 'image' || args[2] == 'img' || args[2] == 'bot'){
                 type = args[2]
               } else if (user){
                 ment = message.guild.member(user)
+                userID = ment.id
               } else {
                 message.channel.send('Third arg should be `image, img, bot` or a user mention')
               }
@@ -178,17 +179,20 @@ bot.on('message', async message => {
         }
       }
       purge(amount, type, userID, message, function(data){
+
         if (data == 'base'){
           message.channel.bulkDelete(amount)
         } else {
           if (data.size > 1){
             message.channel.bulkDelete(data)
           } else if (data.size == 1){
-            data[0].delete()
+            var id = String(data.firstKey(1))
+            message.channel.fetchMessage(id).then(message => message.delete())
           } else {
             message.channel.send('No messages found for purging')
           }
         }
+        message.delete(1000)
       })
     } else {
       message.channel.send('You need the manage guild permission to use that command!')
@@ -203,7 +207,7 @@ bot.on('message', async message => {
         message.channel.send(`You can't kick that member`)
       } else {
         args.shift()
-        var reason = args.join()
+        var reason = args.join(' ')
         if (!user){
           message.channel.send('Please specify a user to kick.')
         } else {

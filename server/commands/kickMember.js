@@ -8,12 +8,17 @@ kickMember = function(member, reason, callback){
       .setTitle('Member kicked')
       .setAuthor('Marv')
       .setColor(5577355)
-      .setDescription(`Succesfully kicked ${user.tag}`)
+      .setDescription(`Succesfully kicked ${member.user.tag}`)
+      .addField('Reason', reason)
+
+      callback(embed)
     }).catch(err => {
+      console.log(err)
       embed = 'Unable to kick that member'
+      callback(embed)
     })
   } else {
     embed = `That user isn't in this guild`
+    callback(embed)
   }
-  callback(embed)
 }
