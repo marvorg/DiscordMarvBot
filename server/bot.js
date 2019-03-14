@@ -107,7 +107,8 @@ bot.on('message', async message => {
   }
 
   else if (command == 'help'){
-    fetchHelp(function(data){
+    var page = args[0]
+    fetchHelp(page, function(data){
       message.channel.send(data)
     })
   }
