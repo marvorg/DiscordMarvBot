@@ -203,15 +203,37 @@ bot.on('message', async message => {
     if(message.member.hasPermission("MANAGE_GUILD")){
       var user = message.mentions.users.first()
       var check = message.guild.member(user)
-      if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
-        message.channel.send(`You can't kick that member`)
+      if (!user){
+        message.channel.send('Please specify a user to kick.')
       } else {
-        args.shift()
-        var reason = args.join(' ')
-        if (!user){
-          message.channel.send('Please specify a user to kick.')
+        if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
+          message.channel.send(`You can't kick that member`)
         } else {
+          args.shift()
+          var reason = args.join(' ')
           kickMember(check, reason, function(data){
+            message.channel.send(data)
+          })
+        }
+      }
+    } else {
+      message.channel.send('You need the manage guild permission to use that command!')
+    }
+  }
+
+  else if (command == 'ban'){
+    if(message.member.hasPermission("MANAGE_GUILD")){
+      var user = message.mentions.users.first()
+      var check = message.guild.member(user)
+      if (!user){
+        message.channel.send('Please specify a user to ban.')
+      } else {
+        if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
+          message.channel.send(`You can't ban that member.`)
+        } else {
+          args.shift()
+          var reason = args.join(' ')
+          banMember(check, reason, function(data){
             message.channel.send(data)
           })
         }
