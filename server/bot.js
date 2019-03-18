@@ -53,201 +53,214 @@ bot.on('message', async message => {
   var args = message.content.slice(prefix.length).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
 
-  if(command == 'scp') {
-    var num = args[0]
-    fetchSCP(num, function(data){
-      message.channel.send(data);
-    })
-  }
+  switch (command){
+    case "scp":
 
-  else if (command == 'tales'){
-    var input = message.content.split('tales')[1].trim()
-    fetchTales(input, function(data){
-      message.channel.send(data);
-    })
-  }
-
-  else if (command == '001'){
-    var proposals = fetchProposals()
-    message.channel.send(proposals);
-  }
-
-  else if (command == "change_prefix"){
-
-    // Prevents certain users from changing the prefix in a server
-    if(message.member.hasPermission("MANAGE_GUILD")) {
-      var new_prefix = args[0]
-      if(new_prefix.length >= 500){
-        new_prefix = new_prefix.substring(0, 500)
-      }
-      // do we already have a prefix?
-      if(settings.findOne({_id:message.guild.id})){
-        // lets update it
-        settings.update({_id:message.guild.id}, {$set:{prefix:new_prefix}})
-      }else{
-        // nop lets insert it
-        settings.insert({_id:message.guild.id, prefix:new_prefix})
-      }
-      message.channel.send("Prefix set to: "+new_prefix);
-    }else{
-      message.channel.send("You need the manage guild permission to use that command!")
-    }
-  }
-
-  else if (command == 'info'){
-    fetchStats(bot, function(data){
-      message.channel.send(data)
-    })
-  }
-
-  else if (command == 'ping') {
-    // Finds ping by checking when the 'Ping?' message is sent against when the command message was sent
-    const m = await message.channel.send('Ping?');
-    m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-  }
-
-  else if (command == 'help'){
-    var page = args[0]
-    fetchHelp(page, function(data){
-      message.channel.send(data)
-    })
-  }
-
-  else if (command == 'sysinfo'){
-    fetchSysInfo(function(data){
-      message.channel.send(data)
-    })
-  }
-
-  else if (command == 'gregg_rulz'){
-    message.channel.send('ok')
-  }
-
-  else if (command == 'generate'){
-    var input = message.content.split('generate')[1].trim()
-
-    var embed = shortPreProcessing(message)
-    const m = await message.channel.send(embed[1]);
-
-    if(embed[0] != 'fail'){
-      generateShort(input, function(data){
-        m.delete();
-        if(data){
-          message.channel.send('Hey <@'+embed[2]+'> Heres your story!')
-          message.channel.send(data)
-        }else{
-          message.channel.send('Error: Must be a number ( up to 5 digits )')
-        }
+      var num = args[0]
+      fetchSCP(num, function(data){
+        message.channel.send(data);
       })
-    }
-  }
+      break;
 
-  else if (command == 'purge'){
-    var amount = ''
-    var type
-    var user = message.mentions.users.first()
-    var ment
-    var userID
-    if(message.member.hasPermission("MANAGE_GUILD")){
-      if (Number(args[0]) == 'NaN'){
-        message.channel.send('First arg of `purge` should be a number')
-      } else {
-        amount = parseInt(args[0])
-        if (amount > 100){
-          message.channel.send('Can only delete up to 100 messages')
+    case "tales":
+
+      var input = message.content.split('tales')[1].trim()
+      fetchTales(input, function(data){
+        message.channel.send(data);
+      })
+      break;
+
+    case "001":
+
+      var proposals = fetchProposals()
+      message.channel.send(proposals);
+      break;
+
+    case "change_prefix":
+
+      // Prevents certain users from changing the prefix in a server
+      if(message.member.hasPermission("MANAGE_GUILD")) {
+        var new_prefix = args[0]
+        if(new_prefix.length >= 500){
+          new_prefix = new_prefix.substring(0, 500)
+        }
+        // do we already have a prefix?
+        if(settings.findOne({_id:message.guild.id})){
+          // lets update it
+          settings.update({_id:message.guild.id}, {$set:{prefix:new_prefix}})
+        }else{
+          // nop lets insert it
+          settings.insert({_id:message.guild.id, prefix:new_prefix})
+        }
+        message.channel.send("Prefix set to: "+new_prefix);
+      }else{
+        message.channel.send("You need the manage guild permission to use that command!")
+      }
+      break;
+
+    case "info":
+
+      fetchStats(bot, function(data){
+        message.channel.send(data)
+      })
+      break;
+
+    case "ping":
+
+      // Finds ping by checking when the 'Ping?' message is sent against when the command message was sent
+      var m = await message.channel.send('Ping?');
+      m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
+      break;
+
+    case "help":
+
+      var page = args[0]
+      fetchHelp(page, function(data){
+        message.channel.send(data)
+      })
+      break;
+
+    case "sysinfo":
+
+      fetchSysInfo(function(data){
+        message.channel.send(data)
+      })
+      break;
+
+    case "generate":
+
+      var input = message.content.split('generate')[1].trim()
+
+      var embed = shortPreProcessing(message)
+      var m = await message.channel.send(embed[1]);
+
+      if(embed[0] != 'fail'){
+        generateShort(input, function(data){
+          m.delete();
+          if(data){
+            message.channel.send('Hey <@'+embed[2]+'> Heres your story!')
+            message.channel.send(data)
+          }else{
+            message.channel.send('Error: Must be a number ( up to 5 digits )')
+          }
+        })
+      }
+      break;
+
+    case "purge":
+
+      var amount = ''
+      var type
+      var user = message.mentions.users.first()
+      var ment
+      var userID
+      var correct_inputs = true
+      if(message.member.hasPermission("MANAGE_GUILD")){
+        if (Number(args[0]) == 'NaN'){
+          message.channel.send('First arg of `purge` should be a number')
         } else {
-          if (args[1]){
-            if (args[1] == 'image' || args[1] == 'img' || args[1] == 'bot'){
-              type = args[1]
-              console.log(type, args[1])
-            } else if (user) {
-              ment = message.guild.member(user)
-              userID = ment.id
-            } else {
-              message.channel.send('Second arg should be `image, img, bot` or a user mention')
-            }
-            if (args[2]){
-              if (args[2] == 'image' || args[2] == 'img' || args[2] == 'bot'){
-                type = args[2]
-              } else if (user){
+          amount = parseInt(args[0])
+          if (amount > 100){
+            message.channel.send('Can only delete up to 100 messages')
+            correct_inputs = false
+          } else {
+            if (args[1]){
+              if (args[1] == 'image' || args[1] == 'img' || args[1] == 'bot'){
+                type = args[1]
+                console.log(type, args[1])
+              } else if (user) {
                 ment = message.guild.member(user)
                 userID = ment.id
               } else {
-                message.channel.send('Third arg should be `image, img, bot` or a user mention')
+                message.channel.send('Second arg should be `image, img, bot` or a user mention')
+                correct_inputs = false
+              }
+              if (args[2]){
+                if (args[2] == 'image' || args[2] == 'img' || args[2] == 'bot'){
+                  type = args[2]
+                } else if (user){
+                  ment = message.guild.member(user)
+                  userID = ment.id
+                } else {
+                  message.channel.send('Third arg should be `image, img, bot` or a user mention')
+                  correct_inputs = false
+                }
               }
             }
           }
         }
-      }
-      purge(amount, type, userID, message, function(data){
+        if (correct_inputs == true){
+          purge(amount, type, userID, message, function(data){
 
-        if (data == 'base'){
-          message.channel.bulkDelete(amount)
+            if (data == 'base'){
+              message.channel.bulkDelete(amount)
+            } else {
+              if (data.size > 1){
+                message.channel.bulkDelete(data)
+              } else if (data.size == 1){
+                var id = String(data.firstKey(1))
+                message.channel.fetchMessage(id).then(message => message.delete())
+              } else {
+                message.channel.send('No messages found for purging')
+              }
+            }
+            message.delete(1000)
+          })
+        }
+      } else {
+        message.channel.send('You need the manage guild permission to use that command!')
+      }
+      break;
+
+    case "kick":
+
+      if(message.member.hasPermission("MANAGE_GUILD")){
+        var user = message.mentions.users.first()
+        var check = message.guild.member(user)
+        if (!user){
+          message.channel.send('Please specify a user to kick.')
         } else {
-          if (data.size > 1){
-            message.channel.bulkDelete(data)
-          } else if (data.size == 1){
-            var id = String(data.firstKey(1))
-            message.channel.fetchMessage(id).then(message => message.delete())
+          if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
+            message.channel.send(`You can't kick that member`)
           } else {
-            message.channel.send('No messages found for purging')
+            args.shift()
+            var reason = args.join(' ')
+            kickMember(check, reason, function(data){
+              message.channel.send(data)
+            })
           }
         }
-        message.delete(1000)
-      })
-    } else {
-      message.channel.send('You need the manage guild permission to use that command!')
-    }
-  }
-
-  else if (command == 'kick'){
-    if(message.member.hasPermission("MANAGE_GUILD")){
-      var user = message.mentions.users.first()
-      var check = message.guild.member(user)
-      if (!user){
-        message.channel.send('Please specify a user to kick.')
       } else {
-        if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
-          message.channel.send(`You can't kick that member`)
-        } else {
-          args.shift()
-          var reason = args.join(' ')
-          kickMember(check, reason, function(data){
-            message.channel.send(data)
-          })
-        }
+        message.channel.send('You need the manage guild permission to use that command!')
       }
-    } else {
-      message.channel.send('You need the manage guild permission to use that command!')
-    }
-  }
+      break;
 
-  else if (command == 'ban'){
-    if(message.member.hasPermission("MANAGE_GUILD")){
-      var user = message.mentions.users.first()
-      var check = message.guild.member(user)
-      if (!user){
-        message.channel.send('Please specify a user to ban.')
+    case "ban":
+
+      if(message.member.hasPermission("MANAGE_GUILD")){
+        var user = message.mentions.users.first()
+        var check = message.guild.member(user)
+        if (!user){
+          message.channel.send('Please specify a user to ban.')
+        } else {
+          if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
+            message.channel.send(`You can't ban that member.`)
+          } else {
+            args.shift()
+            var reason = args.join(' ')
+            banMember(check, reason, function(data){
+              message.channel.send(data)
+            })
+          }
+        }
       } else {
-        if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
-          message.channel.send(`You can't ban that member.`)
-        } else {
-          args.shift()
-          var reason = args.join(' ')
-          banMember(check, reason, function(data){
-            message.channel.send(data)
-          })
-        }
+        message.channel.send('You need the manage guild permission to use that command!')
       }
-    } else {
-      message.channel.send('You need the manage guild permission to use that command!')
-    }
-  }
+      break;
 
-  else{
-    message.channel.send('Thats not a valid command, use `help` to view commands.');
+    default:
+      message.channel.send('Thats not a valid command, use `help` to view commands.');
   }
-
 });
 
 // Restarts on a full disconnect
