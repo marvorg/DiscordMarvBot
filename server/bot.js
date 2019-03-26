@@ -1,7 +1,17 @@
+// Edited the login
+// Commented out DBL stats
+//took setInterval for dbl out of bot.on('ready')
+
+//
+const prefix = '%'
+const colors = require('colors/safe')
+const fs = require('fs')
+// added teh modules I added sperately, so you can move if pleased - lamb
+
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const DBL = require("dblapi.js");
-const dbl = new DBL(process.env.BOTLIST_TOKEN, bot);
+//const dbl = new DBL(process.env.BOTLIST_TOKEN, bot);
 const { RichEmbed } = require('discord.js');
 
 // Sets bots activity to display amount of servers
@@ -13,11 +23,15 @@ function activity(){
 bot.on('ready', () => {
   console.log(`Started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers`);
   activity();
-
-  setInterval(() => {
-    dbl.postStats(bot.guilds.size);
-  }, 1800000);
 });
+
+
+/*
+setInterval(() => {
+  dbl.postStats(bot.guilds.size);
+}, 1800000);
+*/
+
 
 bot.on('guildCreate', guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). With ${guild.membercount} members`);
@@ -31,237 +45,59 @@ bot.on('guildDelete', guild => {
   activity();
 });
 
-bot.on('message', async message => {
-
-  // Prevents replies to other bots
+bot.on('message', message => {
   if(message.author.bot) return;
-  var prefix = ''
+  var prefix = '%'
+  if(settings.findOne({_id:message.guild.id})) prefix = settings.findOne({_id:message.guild.id}) //no need for else statements~
 
-  if(settings.findOne({_id:message.guild.id})){
-    prefix = settings.findOne({_id:message.guild.id}).prefix
-  }else{
-    prefix = '%'
-  }
+	if (message.content[0] === prefix) {
 
-  if (message.isMentioned(bot.user)) {
-    message.channel.send('Your prefix is: '+prefix);
-  }
+    bot.commands = new Discord.Collection();
+    
+		const dir1pre = fs.readdirSync('./commands/fun').filter(file => file.endsWith('.js'));
+		const dir1 = dir1pre.map(function(v) {
+			return '/fun/' + v;
+    });
 
-  // Prevents replies to un-prefixed messages
-  if(message.content.substring(0, prefix.length) != prefix) return;
+		const dir2pre = fs.readdirSync('./commands/scp').filter(file => file.endsWith('.js'));
+		const dir2 = dir2pre.map(function(v) {
+			return '/scp/' + v;
+    });
 
-  var args = message.content.slice(prefix.length).trim().split(/ +/g);
-  var command = args.shift().toLowerCase();
+		const dir3pre = fs.readdirSync('./commands/staff').filter(file => file.endsWith('.js'));
+		const dir3 = dir3pre.map(function(v) {
+			return '/staff/' + v;
+    });
 
-  switch (command){
-    case "scp":
+		const dir4pre = fs.readdirSync('./commands/utility').filter(file => file.endsWith('.js'));
+		const dir4 = dir4pre.map(function(v) {
+			return '/utility/' + v;
+    });
 
-      var num = args[0]
-      fetchSCP(num, function(data){
-        message.channel.send(data);
-      })
-      break;
+    
+		const commandFiles = dir1.concat(dir2, dir3, dir4)
 
-    case "tales":
+    for (const file of commandFiles) {
+      const command = require(`./commands${file}`);
+      bot.commands.set(command.name, command);
+    }
+    // The above code scans the directories, mapping all of the commands it finds into a collection. 
 
-      var input = message.content.split('tales')[1].trim()
-      fetchTales(input, function(data){
-        message.channel.send(data);
-      })
-      break;
+    // Args is just the message string split by space, useful for multiple paramaters in code. args[0] being first word, args[1] being second, and so in.
+    const args = message.content.substring(prefix.length).split(' ');
+    const command = args.shift().toLowerCase();
+		if (!bot.commands.has(command)) return;
 
-    case "001":
-
-      var proposals = fetchProposals()
-      message.channel.send(proposals);
-      break;
-
-    case "change_prefix":
-
-      // Prevents certain users from changing the prefix in a server
-      if(message.member.hasPermission("MANAGE_GUILD")) {
-        var new_prefix = args[0]
-        if(new_prefix.length >= 500){
-          new_prefix = new_prefix.substring(0, 500)
-        }
-        // do we already have a prefix?
-        if(settings.findOne({_id:message.guild.id})){
-          // lets update it
-          settings.update({_id:message.guild.id}, {$set:{prefix:new_prefix}})
-        }else{
-          // nop lets insert it
-          settings.insert({_id:message.guild.id, prefix:new_prefix})
-        }
-        message.channel.send("Prefix set to: "+new_prefix);
-      }else{
-        message.channel.send("You need the manage guild permission to use that command!")
-      }
-      break;
-
-    case "info":
-
-      fetchStats(bot, function(data){
-        message.channel.send(data)
-      })
-      break;
-
-    case "ping":
-
-      // Finds ping by checking when the 'Ping?' message is sent against when the command message was sent
-      var m = await message.channel.send('Ping?');
-      m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
-      break;
-
-    case "help":
-
-      var page = args[0]
-      fetchHelp(page, function(data){
-        message.channel.send(data)
-      })
-      break;
-
-    case "sysinfo":
-
-      fetchSysInfo(function(data){
-        message.channel.send(data)
-      })
-      break;
-
-    case "generate":
-
-      var input = message.content.split('generate')[1].trim()
-
-      var embed = shortPreProcessing(message)
-      var m = await message.channel.send(embed[1]);
-
-      if(embed[0] != 'fail'){
-        generateShort(input, function(data){
-          m.delete();
-          if(data){
-            message.channel.send('Hey <@'+embed[2]+'> Heres your story!')
-            message.channel.send(data)
-          }else{
-            message.channel.send('Error: Must be a number ( up to 5 digits )')
-          }
-        })
-      }
-      break;
-
-    case "purge":
-
-      var amount = ''
-      var type
-      var user = message.mentions.users.first()
-      var ment
-      var userID
-      var correct_inputs = true
-      if(message.member.hasPermission("MANAGE_GUILD")){
-        if (Number(args[0]) == 'NaN'){
-          message.channel.send('First arg of `purge` should be a number')
-        } else {
-          amount = parseInt(args[0])
-          if (amount > 100){
-            message.channel.send('Can only delete up to 100 messages')
-            correct_inputs = false
-          } else {
-            if (args[1]){
-              if (args[1] == 'image' || args[1] == 'img' || args[1] == 'bot'){
-                type = args[1]
-                console.log(type, args[1])
-              } else if (user) {
-                ment = message.guild.member(user)
-                userID = ment.id
-              } else {
-                message.channel.send('Second arg should be `image, img, bot` or a user mention')
-                correct_inputs = false
-              }
-              if (args[2]){
-                if (args[2] == 'image' || args[2] == 'img' || args[2] == 'bot'){
-                  type = args[2]
-                } else if (user){
-                  ment = message.guild.member(user)
-                  userID = ment.id
-                } else {
-                  message.channel.send('Third arg should be `image, img, bot` or a user mention')
-                  correct_inputs = false
-                }
-              }
-            }
-          }
-        }
-        if (correct_inputs == true){
-          purge(amount, type, userID, message, function(data){
-
-            if (data == 'base'){
-              message.channel.bulkDelete(amount)
-            } else {
-              if (data.size > 1){
-                message.channel.bulkDelete(data)
-              } else if (data.size == 1){
-                var id = String(data.firstKey(1))
-                message.channel.fetchMessage(id).then(message => message.delete())
-              } else {
-                message.channel.send('No messages found for purging')
-              }
-            }
-            message.delete(1000)
-          })
-        }
-      } else {
-        message.channel.send('You need the manage guild permission to use that command!')
-      }
-      break;
-
-    case "kick":
-
-      if(message.member.hasPermission("MANAGE_GUILD")){
-        var user = message.mentions.users.first()
-        var check = message.guild.member(user)
-        if (!user){
-          message.channel.send('Please specify a user to kick.')
-        } else {
-          if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
-            message.channel.send(`You can't kick that member`)
-          } else {
-            args.shift()
-            var reason = args.join(' ')
-            kickMember(check, reason, function(data){
-              message.channel.send(data)
-            })
-          }
-        }
-      } else {
-        message.channel.send('You need the manage guild permission to use that command!')
-      }
-      break;
-
-    case "ban":
-
-      if(message.member.hasPermission("MANAGE_GUILD")){
-        var user = message.mentions.users.first()
-        var check = message.guild.member(user)
-        if (!user){
-          message.channel.send('Please specify a user to ban.')
-        } else {
-          if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
-            message.channel.send(`You can't ban that member.`)
-          } else {
-            args.shift()
-            var reason = args.join(' ')
-            banMember(check, reason, function(data){
-              message.channel.send(data)
-            })
-          }
-        }
-      } else {
-        message.channel.send('You need the manage guild permission to use that command!')
-      }
-      break;
-
-    default:
-      message.channel.send('Thats not a valid command, use `help` to view commands.');
-  }
-});
+    // Tries to execute the selected file from the collection it loaded, catching it if it errors out.
+		try {
+			bot.commands.get(command).execute(bot, message, args);
+		} catch (error) {
+			console.error(colors.red(error));
+			message.channel.send('there was an error trying to execute that command! Was it formatted correctly?');
+		}
+	}
+}
+);
 
 // Restarts on a full disconnect
 bot.on('disconnected', function() {
@@ -274,4 +110,4 @@ bot.on('error', function(error){
   logError(error)
 });
 
-bot.login(process.env.DISCORD_TOKEN);
+bot.login('NTQ1MDYxMjQ3NzQyMTE1ODQz.D3rs1Q.cmyCMviidpNLvXbaWwN-_LufRDI')
