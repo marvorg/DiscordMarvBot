@@ -1,10 +1,11 @@
 timeConverter = function(time){
-  let totalSeconds = (time / 1000);
-  let days = Math.floor(totalSeconds / 86400);
-  let hours = Math.floor(totalSeconds / 3600);
-  totalSeconds %= 3600;
-  let minutes = Math.floor(totalSeconds / 60);
-  let seconds = totalSeconds % 60;
-  let uptime = `${Math.round(days)} days, ${Math.round(hours)} hours, ${Math.round(minutes)} minutes and ${Math.round(seconds)} seconds`;
+  var seconds = Math.floor(time / 1000);
+  var minute = Math.floor(seconds / 60);
+  seconds = seconds % 60;
+  var hour = Math.floor(minute / 60);
+  minute = minute % 60;
+  var day = Math.floor(hour / 24);
+  hour = hour % 24;
+  let uptime = `${Math.round(day)} days, ${Math.round(hour)} hours, ${Math.round(minute)} minutes and ${Math.round(seconds)} seconds`;
   return uptime
 }
