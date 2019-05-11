@@ -37,7 +37,7 @@ fetchHelp = function(page, callback){
     .addField('change_prefix', 'Changes Marvs prefix for your server. Used as `change_prefix x` where x is the desired prefix. Supports multi-character prefixes.')
     .addField('kick', 'Kicks a specified user. Used as `kick user reason`, reason is optional, user must be a mention (@user) of the user you want to kick.')
     .addField('ban', 'Bans a specified user. Used as `ban user reason`, reason is optional, user must be a mention (@user) of the user you want to ban.')
-    .addField('purge', 'Mass deletes messages that pass certain filters. Used as `purge x type user` or `purge x user type` where x is the number of messages to delete. User and type are optional but user must be a mention, type is either `image, img or bot`.')
+    .addField('purge', 'Mass deletes messages that pass certain filters. Used as `purge x type user`, the 3 args can be in any order, user must be a mention, type is img or bot, x is mandatory and is the amount to delete')
 
     callback(embed)
 
