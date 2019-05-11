@@ -2,6 +2,7 @@ const { RichEmbed } = require('discord.js')
 
 kickMember = function(member, reason, callback){
   var embed = ''
+
   if (member){
     member.kick(reason).then(() => {
       embed = new RichEmbed()
@@ -12,11 +13,13 @@ kickMember = function(member, reason, callback){
       .addField('Reason', reason)
 
       callback(embed)
+
     }).catch(err => {
       console.log(err)
       embed = 'Unable to kick that member'
       callback(embed)
     })
+
   } else {
     embed = `That user isn't in this guild`
     callback(embed)

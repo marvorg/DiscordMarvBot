@@ -19,30 +19,32 @@ bot.on('ready', () => {
   }, 1800000);
 });
 
+//When a server is joined
 bot.on('guildCreate', guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). With ${guild.membercount} members`);
   logGuild('Added to Guild!', guild, 'added')
   activity();
 });
 
+//When removed from a server
 bot.on('guildDelete', guild => {
   console.log(`Removed from: ${guild.name} (id: ${guild.id})`);
   logGuild('Removed from Guild!', guild, 'removed')
   activity();
 });
 
+//When a message is sent
 bot.on('message', async message => {
-
   // Prevents replies to other bots
   if(message.author.bot) return;
-  var prefix = ''
 
+  //Finds the prefix for the guild, or uses the default if no custom prefix is set
+  var prefix = '%'
   if(settings.findOne({_id:message.guild.id})){
     prefix = settings.findOne({_id:message.guild.id}).prefix
-  }else{
-    prefix = '%'
   }
 
+  //Replies to mentions with the servers prefix
   if (message.isMentioned(bot.user)) {
     message.channel.send('Your prefix is: '+prefix);
   }
@@ -155,57 +157,47 @@ bot.on('message', async message => {
       var ment
       var userID
       var correct_inputs = true
+
       if(message.member.hasPermission("MANAGE_GUILD")){
-        if (Number(args[0]) == 'NaN'){
-          message.channel.send('First arg of `purge` should be a number')
-        } else {
-          amount = parseInt(args[0])
-          if (amount > 100){
-            message.channel.send('Can only delete up to 100 messages')
-            correct_inputs = false
+        var types = ['image', 'img', 'bot']
+        var user = message.mentions.users.first()
+        var memb
+        var amount
+        var type
+
+        //Check for amount of messages to delete, and the type, by searching through all stored args
+        args.forEach(function(item, index, array){
+          if (isNaN(item) == false){
+            amount = Number(item)
+          } else if (types.includes(item) == true) {
+            type = item
+          }
+        })
+
+        //If theres a user mention, check if theyre in the guild
+        if (user){
+          memb = message.guild.member(user)
+          if (!memb){
+            message.channel.send(`That user isn't in this server.`)
           } else {
-            if (args[1]){
-              if (args[1] == 'image' || args[1] == 'img' || args[1] == 'bot'){
-                type = args[1]
-                console.log(type, args[1])
-              } else if (user) {
-                ment = message.guild.member(user)
-                userID = ment.id
-              } else {
-                message.channel.send('Second arg should be `image, img, bot` or a user mention')
-                correct_inputs = false
-              }
-              if (args[2]){
-                if (args[2] == 'image' || args[2] == 'img' || args[2] == 'bot'){
-                  type = args[2]
-                } else if (user){
-                  ment = message.guild.member(user)
-                  userID = ment.id
-                } else {
-                  message.channel.send('Third arg should be `image, img, bot` or a user mention')
-                  correct_inputs = false
-                }
-              }
-            }
+            userID = memb.id
           }
         }
-        if (correct_inputs == true){
-          purge(amount, type, userID, message, function(data){
 
-            if (data == 'base'){
-              message.channel.bulkDelete(amount)
+        //Makes sure an amount is given and is less than or equal to 100
+        if (amount && amount <= 100){
+          purge(amount, type, userID, message, function(msgs){
+            if (msgs.size > 1){
+              message.channel.bulkDelete(msgs)
+            } else if (msgs.size == 1){
+              var id = String(msgs.firstKey(1))
+              message.channel.fetchMessage(id).then(m => m.delete())
             } else {
-              if (data.size > 1){
-                message.channel.bulkDelete(data)
-              } else if (data.size == 1){
-                var id = String(data.firstKey(1))
-                message.channel.fetchMessage(id).then(message => message.delete())
-              } else {
-                message.channel.send('No messages found for purging')
-              }
+              message.channel.send('No messages found for purging.')
             }
-            message.delete(1000)
           })
+        } else {
+          message.channel.send('Please specify an amount of messages to delete (100 max)')
         }
       } else {
         message.channel.send('You need the manage guild permission to use that command!')
@@ -217,12 +209,17 @@ bot.on('message', async message => {
       if(message.member.hasPermission("MANAGE_GUILD")){
         var user = message.mentions.users.first()
         var check = message.guild.member(user)
+        //If no user is mentioned
         if (!user){
           message.channel.send('Please specify a user to kick.')
+
         } else {
+          //If the member they try to kick is higher ranking than them
           if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0){
             message.channel.send(`You can't kick that member`)
+
           } else {
+            //Removes the mention then joins other args together for the reason
             args.shift()
             var reason = args.join(' ')
             kickMember(check, reason, function(data){
@@ -263,7 +260,7 @@ bot.on('message', async message => {
   }
 });
 
-// Restarts on a full disconnect
+// Restarts on a full disconnect, after attempting to re-login
 bot.on('disconnected', function() {
   logDisconnect()
   console.log('disconnected!')

@@ -2,6 +2,7 @@ const { RichEmbed } = require('discord.js');
 
 fetchHelp = function(page, callback){
   var embed = ''
+
   if (!page){
     embed = new RichEmbed()
     .setTitle('Commands List')
@@ -13,6 +14,7 @@ fetchHelp = function(page, callback){
     .addField('other', 'help, info, ping')
 
     callback(embed)
+
   } else if (page == 'scp'){
     embed = new RichEmbed()
     .setTitle('Commands List: scp')
@@ -25,6 +27,7 @@ fetchHelp = function(page, callback){
     .addField('generate', 'Generate a fake SCP using ML! Used as `generate x` where x is the desired SCP number! Limited to 5 generations per server per halfhour!')
 
     callback(embed)
+
   } else if (page == 'moderation'){
     embed = new RichEmbed()
     .setTitle('Commands List: moderation')
@@ -37,6 +40,7 @@ fetchHelp = function(page, callback){
     .addField('purge', 'Mass deletes messages that pass certain filters. Used as `purge x type user` or `purge x user type` where x is the number of messages to delete. User and type are optional but user must be a mention, type is either `image, img or bot`.')
 
     callback(embed)
+
   } else if (page == 'other'){
     embed = new RichEmbed()
     .setTitle('Commands List: other')
@@ -48,6 +52,7 @@ fetchHelp = function(page, callback){
     .addField('ping', 'Shows the bots latency to the server and discords API in ms.')
 
     callback(embed)
+
   } else {
     embed = 'Not a valid help page.'
 
