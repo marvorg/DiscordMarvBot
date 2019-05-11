@@ -13,10 +13,22 @@ function activity(){
 bot.on('ready', () => {
   console.log(`Started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers`);
   activity();
-
   setInterval(() => {
-    dbl.postStats(bot.guilds.size);
+    // lets get the total number of servers from our ShardManager
+    bot.shard.fetchClientValues('guilds.size')
+    .then(results => {
+      dbl.postStats(results.reduce((prev, guildCount) => prev + guildCount, 0));
+    })
+    .catch(console.error);
   }, 1800000);
+
+  // print shard info
+  setInterval(function(){
+    bot.user.setActivity(`On shard ${bot.shard.id + 1} of ${bot.shard.count}`);
+    setTimeout(function(){
+      activity()
+    }, 5000)
+  }, 60000)
 });
 
 //When a server is joined
