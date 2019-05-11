@@ -3,3 +3,4 @@ server/config.json
 start.sh
 private/
 gpt/
+dbBackups/

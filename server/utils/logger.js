@@ -55,3 +55,15 @@ logRatelimit = function(message){
     }
   });
 }
+
+logError = function(error){
+  logger.log({
+    level: 'warn',
+    message: 'The bot encountered an error!',
+    meta: {
+      error: error,
+      type: 'error',
+      date: new Date()
+    }
+  });
+}

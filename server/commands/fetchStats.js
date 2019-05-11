@@ -11,6 +11,7 @@ fetchStats = function(bot, callback){
   .addField("Channels", bot.channels.size)
   .addField("Users", bot.users.size)
   .addField("Support Server", "https://discord.gg/NEXPCJz")
+  .addField("Invite Link", "https://discordapp.com/oauth2/authorize?client_id=538173713162567690&scope=bot&permissions=125958")
 
   callback(embed)
 }

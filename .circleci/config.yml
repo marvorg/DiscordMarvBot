@@ -75,8 +75,8 @@ jobs:
       - run:
           name: Transfer Binary
           command: |
-            scp ./builds/app.tar.gz $USERNAME@$SERVER:/home/marv/builds
+            scp -P 5555 ./builds/app.tar.gz $USER@$SERVER:/home/circleci/builds
       - run:
           name: Deploy
           command: |
-            ssh -t $USERNAME@$SERVER "/home/marv/deployMeteor.sh"
+            ssh -p 5555 -t $USER@$SERVER "./deploy.sh"
