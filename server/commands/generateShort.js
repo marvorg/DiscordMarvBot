@@ -5,7 +5,7 @@ Fiber = Npm.require('fibers');
 
 q = new Queue(function (what, cb) {
   var startTime = new Date()
-  request('http://35.203.31.65:5000/?scp='+what+'&auth='+process.env.GEN_AUTH, function(error,response,html){
+  request(`http://${process.env.GEN_SERV}:5000/?scp=`+what+'&auth='+process.env.GEN_AUTH, function(error,response,html){
     if (!error && response.statusCode == 200){
       var embed = new RichEmbed()
       .setTitle('Marv Containment Unit:tm:')
