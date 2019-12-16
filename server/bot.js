@@ -270,7 +270,7 @@ bot.on('message', async message => {
       break
 
     default:
-      message.channel.send('Thats not a valid command, use `help` to view commands.')
+      //message.channel.send('Thats not a valid command, use `help` to view commands.')
   }
 })
 
