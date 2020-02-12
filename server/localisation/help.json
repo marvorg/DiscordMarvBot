@@ -1,0 +1,423 @@
+{
+  "en": {
+    "BASE": {
+      "TITLE": "Commands List",
+      "DESCRIP": "To view usage of specific commands, use `help x` where x is the page with the command you want. e.g. `help scp`"
+    },
+    "SCP": {
+      "TITLE": "Commands List: scp",
+      "DESCRIP": "Usage is shown with each command",
+      "SCP": "Used as `scp x` where x is the scp number you want to find. e.g. `scp 173`",
+      "TALES": "Used as `tales x` where x is the full or partial title of the tale you want to search for. e.g. `tales c-sharp`",
+      "PROP": "Links all scp-001 proposals",
+      "GENERATE": "Generate a fake SCP using ML! Used as `generate x` where x is the desired SCP number! Limited to 5 generations per server per halfhour!"
+    },
+    "MOD": {
+      "TITLE": "Commands List: moderation",
+      "DESCRIP": "Usage is shown with each command, these commands require the manage server permission to use",
+      "PREFIX": "Changes Marvs prefix for your server. Used as `change_prefix x` where x is the desired prefix. Supports multi-character prefixes.",
+      "KICK": "Kicks a specified user. Used as `kick user reason`, reason is optional, user must be a mention (@user) of the user you want to kick.",
+      "BAN": "Bans a specified user. Used as `ban user reason`, reason is optional, user must be a mention (@user) of the user you want to ban.",
+      "PURGE": "Mass deletes messages that pass certain filters. Used as `purge x type user`, the 3 args can be in any order, user must be a mention, type is img or bot, x is mandatory and is the amount to delete.",
+      "LANG": "Changes the bots language for this server, used as `language x` where x is a valid language code, leaving x blank shows the valid codes."
+    },
+    "OTHER": {
+      "TITLE": "Commands List: other",
+      "DESCRIP": "Usage is shown with each command",
+      "HELP": "Displays the list of command pages.",
+      "INFO": "Shows info about the bot such as uptime. Also provides a link to the support server.",
+      "PING": "Shows the bots latency to the server and discords API in ms."
+    },
+    "INVALID": "Not a valid help page."
+  },
+  "ru": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "ko": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "cn": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "fr": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "pl": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "es": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "th": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "ja": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "de": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "it": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "ua": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "pt/br": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  },
+  "cz": {
+    "BASE": {
+      "TITLE": "",
+      "DESCRIP": ""
+    },
+    "SCP": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "SCP": "",
+      "TALES": "",
+      "PROP": "",
+      "GENERATE": ""
+    },
+    "MOD": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "PREFIX": "",
+      "KICK": "",
+      "BAN": "",
+      "PURGE": ""
+    },
+    "OTHER": {
+      "TITLE": "",
+      "DESCRIP": "",
+      "HELP": "",
+      "INFO": "",
+      "PING": ""
+    },
+    "INVALID": ""
+  }
+}

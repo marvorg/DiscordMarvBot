@@ -3,6 +3,8 @@ const bot = new Discord.Client()
 const DBL = require('dblapi.js')
 const dbl = new DBL(process.env.BOTLIST_TOKEN, bot)
 const { RichEmbed } = require('discord.js')
+const langCodes = ['en', 'ru', 'ko', 'cn', 'fr', 'pl', 'es', 'th', 'ja', 'de', 'it', 'ua', 'pt/br', 'cz']
+const commands = require('./localisation/commands')
 
 // Sets bots activity to display amount of servers
 function activity () {
@@ -56,13 +58,20 @@ bot.on('message', async message => {
 
   // Finds the prefix for the guild, or uses the default if no custom prefix is set
   var prefix = '%'
+  var lang = 'en'
   if (settings.findOne({ _id: message.guild.id })) {
     prefix = settings.findOne({ _id: message.guild.id }).prefix
+
+    if(settings.findOne({ _id: message.guild.id }).language) {
+      lang = settings.findOne({ _id: message.guild.id }).language
+    } else {
+      settings.update({ _id: message.guild.id }, { $set: { language: 'en' } })
+    }
   }
 
   // Replies to mentions with the servers prefix
   if (message.isMentioned(bot.user)) {
-    message.channel.send('Your prefix is: ' + prefix)
+    message.channel.send(commands[lang].PREFIX_CHECK + prefix)
   }
 
   // Prevents replies to un-prefixed messages
@@ -71,18 +80,19 @@ bot.on('message', async message => {
   var args = message.content.slice(prefix.length).trim().split(/ +/g)
   var command = args.shift().toLowerCase()
 
+
   switch (command) {
     case 'scp':
 
       var num = args[0]
-      fetchSCP(num, function (data) {
+      fetchSCP(num, lang, function (data) {
         message.channel.send(data)
       })
       break
 
-    case 'tales':
+    case commands[lang].TALES:
 
-      var input = message.content.split('tales')[1].trim()
+      var input = message.content.split(commands[lang].TALES)[1].trim()
       fetchTales(input, function (data) {
         message.channel.send(data)
       })
@@ -90,11 +100,11 @@ bot.on('message', async message => {
 
     case '001':
 
-      var proposals = fetchProposals()
+      var proposals = fetchProposals(lang)
       message.channel.send(proposals)
       break
 
-    case 'change_prefix':
+    case commands[lang].PREFIX:
 
       // Prevents certain users from changing the prefix in a server
       if (message.member.hasPermission('MANAGE_GUILD')) {
@@ -110,30 +120,52 @@ bot.on('message', async message => {
           // nop lets insert it
           settings.insert({ _id: message.guild.id, prefix: new_prefix })
         }
-        message.channel.send('Prefix set to: ' + new_prefix)
+        message.channel.send(commands[lang].PREFIX_CHANGE + new_prefix)
       } else {
-        message.channel.send('You need the manage guild permission to use that command!')
+        message.channel.send(commands[lang].COMMAND_FAILED_NOT_MOD)
       }
       break
 
-    case 'info':
+    case commands[lang].LANG:
+      //Will remain disabled until translations are sufficiently done
+      /**if (message.member.hasPermission('MANAGE_GUILD')) {
+        var new_lang = args[0]
+        if (langCodes.includes(new_lang)) {
+
+          if (settings.findOne({ _id: message.guild.id })) {
+            settings.update({ _id: message.guild.id }, { $set: { language: new_lang } })
+          } else {
+            settings.insert({ _id: message.guild.id, language: new_lang })
+          }
+          message.channel.send(commands[new_lang].LANG_CHANGE + new_lang)
+
+        } else {
+          var codes = langCodes.join(' ')
+          message.channel.send(commands[lang].COMMAND_FAILED_INVALID_CODE + codes)
+        }
+      } else {
+        message.channel.send(commands[lang].COMMAND_FAILED_NOT_MOD)
+      }**/
+      break
+
+    case commands[lang].INFO:
 
       fetchStats(bot, function (data) {
         message.channel.send(data)
       })
       break
 
-    case 'ping':
+    case commands[lang].PING:
 
       // Finds ping by checking when the 'Ping?' message is sent against when the command message was sent
       var m = await message.channel.send('Ping?')
       m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`)
       break
 
-    case 'help':
+    case commands[lang].HELP:
 
       var page = args[0]
-      fetchHelp(page, function (data) {
+      fetchHelp(page, lang, function (data) {
         message.channel.send(data)
       })
       break
@@ -145,9 +177,9 @@ bot.on('message', async message => {
       })
       break
 
-    case 'generate':
+    case commands[lang].GENERATE:
 
-      var input = message.content.split('generate')[1].trim()
+      var input = message.content.split(commands[new_lang].GENERATE)[1].trim()
 
       var embed = shortPreProcessing(message)
       var m = await message.channel.send(embed[1])
@@ -165,14 +197,13 @@ bot.on('message', async message => {
       }
       break
 
-    case 'purge':
+    case commands[lang].PURGE:
 
       var amount = ''
       var type
       var user = message.mentions.users.first()
       var ment
       var userID
-      var correct_inputs = true
 
       if (message.member.hasPermission('MANAGE_GUILD')) {
         var types = ['image', 'img', 'bot']
@@ -194,7 +225,7 @@ bot.on('message', async message => {
         if (user) {
           memb = message.guild.member(user)
           if (!memb) {
-            message.channel.send('That user isn\'t in this server.')
+            message.channel.send(commands[lang].USER_NOT_IN_SERVER)
           } else {
             userID = memb.id
           }
@@ -203,35 +234,39 @@ bot.on('message', async message => {
         // Makes sure an amount is given and is less than or equal to 100
         if (amount && amount <= 100) {
           purge(amount, type, userID, message, function (msgs) {
+
+            //Bulk delete only can be used on more than 1 message, if theres only 1, grab only that from the awkward list, and delete it
             if (msgs.size > 1) {
               message.channel.bulkDelete(msgs)
             } else if (msgs.size == 1) {
               var id = String(msgs.firstKey(1))
               message.channel.fetchMessage(id).then(m => m.delete())
             } else {
-              message.channel.send('No messages found for purging.')
+              message.channel.send(commands[lang].PURGE_NO_MESSAGES)
             }
+
           })
         } else {
-          message.channel.send('Please specify an amount of messages to delete (100 max)')
+          message.channel.send(commands[lang].COMMAND_FAILED_NO_AMOUNT)
         }
+
       } else {
-        message.channel.send('You need the manage guild permission to use that command!')
+        message.channel.send(commands[lang].COMMAND_FAILED_NOT_MOD)
       }
       break
 
-    case 'kick':
+    case commands[lang].KICK:
 
       if (message.member.hasPermission('MANAGE_GUILD')) {
         var user = message.mentions.users.first()
         var check = message.guild.member(user)
         // If no user is mentioned
         if (!user) {
-          message.channel.send('Please specify a user to kick.')
+          message.channel.send(commands[lang].COMMAND_FAILED_NO_USER_KICK)
         } else {
           // If the member they try to kick is higher ranking than them
           if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0) {
-            message.channel.send('You can\'t kick that member')
+            message.channel.send(commands[lang].COMMAND_FAILED_UNABLE_TO_KICK)
           } else {
             // Removes the mention then joins other args together for the reason
             args.shift()
@@ -242,20 +277,20 @@ bot.on('message', async message => {
           }
         }
       } else {
-        message.channel.send('You need the manage guild permission to use that command!')
+        message.channel.send(commands[lang].COMMAND_FAILED_NOT_MOD)
       }
       break
 
-    case 'ban':
+    case commands[lang].BAN:
 
       if (message.member.hasPermission('MANAGE_GUILD')) {
         var user = message.mentions.users.first()
         var check = message.guild.member(user)
         if (!user) {
-          message.channel.send('Please specify a user to ban.')
+          message.channel.send(commands[lang].COMMAND_FAILED_NO_USER_BAN)
         } else {
           if (message.member.highestRole.comparePositionTo(check.highestRole) <= 0) {
-            message.channel.send('You can\'t ban that member.')
+            message.channel.send(commands[lang].COMMAND_FAILED_UNABLE_TO_BAN)
           } else {
             args.shift()
             var reason = args.join(' ')
@@ -265,12 +300,12 @@ bot.on('message', async message => {
           }
         }
       } else {
-        message.channel.send('You need the manage guild permission to use that command!')
+        message.channel.send(commands[lang].COMMAND_FAILED_NOT_MOD)
       }
       break
 
     default:
-      //message.channel.send('Thats not a valid command, use `help` to view commands.')
+      //message.channel.send('Thats not a valid command, use `help` to view commands.') <-- removed for being annoying
   }
 })
 

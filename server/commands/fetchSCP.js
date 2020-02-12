@@ -1,17 +1,19 @@
 const { RichEmbed } = require('discord.js');
+const links = require('../localisation/baseLinks');
 
-fetchSCP = function(num, callback){
+fetchSCP = function(num, lang, callback){
   var attempt = 0
   var isRandom = false
-  fetch(num)
+  var baseLink = links[lang].LINK
+  fetch(num, baseLink)
 
   // Recursive function to have a health check for random, and lower the chance it fails to find an SCP entry
-  function fetch(num){
+  function fetch(num, baseLink){
     if (num == 'random'){
       isRandom = true
       num = String(Math.floor(Math.random()*(4999-001+1)+001)).padStart(3,'0')
     }
-    var link = 'http://www.scp-wiki.net/scp-' + num
+    var link = baseLink + 'scp-' + num
     var scpnum = 'Link -> SCP-' + num
 
     fetchEntry(link, num, '', function(data){

@@ -1,0 +1,44 @@
+{
+  "en": {
+    "LINK": "http://www.scp-wiki.net/"
+  },
+  "ru": {
+    "LINK": "http://scpfoundation.net/"
+  },
+  "ko": {
+    "LINK": "http://ko.scp-wiki.net/"
+  },
+  "cn": {
+    "LINK": "http://scp-wiki-cn.wikidot.com/"
+  },
+  "fr": {
+    "LINK": "http://fondationscp.wikidot.com/"
+  },
+  "pl": {
+    "LINK": "http://scp-wiki.net.pl/"
+  },
+  "es": {
+    "LINK": "http://scp-es.com/"
+  },
+  "th": {
+    "LINK": "http://scp-th.wikidot.com/"
+  },
+  "ja": {
+    "LINK": "http://ja.scp-wiki.net/"
+  },
+  "de": {
+    "LINK": "http://scp-wiki-de.wikidot.com/"
+  },
+  "it": {
+    "LINK": "http://fondazionescp.wikidot.com/"
+  },
+  "ua": {
+    "LINK": "http://scp-ukrainian.wikidot.com/"
+  },
+  "pt/br": {
+    "LINK": "http://scp-pt-br.wikidot.com/"
+  },
+  "cz": {
+    "LINK": "http://scp-cs.wikidot.com/"
+  }
+}

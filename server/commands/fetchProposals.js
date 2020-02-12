@@ -1,34 +1,36 @@
 const { RichEmbed } = require('discord.js');
+const proposals = require('../localisation/proposals.json');
+const links = require('../localisation/baseLinks.json');
 
-fetchProposals = function(){
-  var links = "[Sheaf Of Papers](http://www.scp-wiki.net/jonathan-ball-s-proposal) \n \
-  [The Prototype](http://www.scp-wiki.net/dr-gears-s-proposal) \n \
-  [The Gate Guardian](http://www.scp-wiki.net/dr-clef-s-proposal) \n \
-  [The Lock](http://www.scp-wiki.net/qntm-s-proposal) \n \
-  [The Factory](http://www.scp-wiki.net/scp-001-o5) \n \
-  [The Spiral Path](http://www.scp-wiki.net/dr-manns-proposal) \n \
-  [The Legacy](http://www.scp-wiki.net/mackenzie-s-proposal) \n \
-  [The Database](http://www.scp-wiki.net/sandrewswann-s-proposal) \n \
-  [The Foundation](http://www.scp-wiki.net/scantron-s-proposal) \n \
-  [Thirty-Six](http://www.scp-wiki.net/djoric-dmatix-proposal) \n \
-  [Keter Duty](http://www.scp-wiki.net/roget-s-proposal) \n \
-  [Ouroboros](http://www.scp-wiki.net/ouroboros) \n \
-  [A Record](http://www.scp-wiki.net/kate-mctiriss-s-proposal) \n \
-  [Past and Future](http://www.scp-wiki.net/kalinins-proposal) \n \
-  [The Consensus](http://www.scp-wiki.net/wrong-proposal) \n \
-  [When Day Breaks](http://www.scp-wiki.net/shaggydredlocks-proposal) \n \
-  [Gods Blind Spot](http://www.scp-wiki.net/spikebrennan-s-proposal) \n \
-  [Normalcy](http://www.scp-wiki.net/wjs-proposal) \n \
-  [The World at Large](http://www.scp-wiki.net/billiths-proposal) \n \
-  [Dead men](http://www.scp-wiki.net/tanhony-s-proposal) \n \
-  [The Worlds gone Beautiful](http://www.scp-wiki.net/lily-s-proposal) \n \
-  [The Scarlet King](http://www.scp-wiki.net/tuftos-proposal) \n \
-  [A Simple Toymaker](http://www.scp-wiki.net/jim-north-s-proposal) \n \
-  [Story of Your Life](http://www.scp-wiki.net/i-h-p-proposal) \n \
-  [A Good Boy](http://www.scp-wiki.net/scp-001-ex) \n \
-  [Project Palisade](http://www.scp-wiki.net/wmdd-s-proposal) \n \
-  [O5-13](http://www.scp-wiki.net/captain-kirby-s-proposal) \n \
-  [Fishhook](http://www.scp-wiki.net/pedantique-s-proposal)"
+fetchProposals = function(lang){
+  var links = `[${proposals[lang].JON}](${links[lang].LINK}jonathan-ball-s-proposal) \n \
+  [${proposals[lang].GEARS}](${links[lang].LINK}dr-gears-s-proposal) \n \
+  [${proposals[lang].CLEF}](${links[lang].LINK}dr-clef-s-proposal) \n \
+  [${proposals[lang].QNTM}](${links[lang].LINK}qntm-s-proposal) \n \
+  [${proposals[lang].O5}](${links[lang].LINK}scp-001-o5) \n \
+  [${proposals[lang].MANN}](${links[lang].LINK}dr-manns-proposal) \n \
+  [${proposals[lang].MACK}](${links[lang].LINK}mackenzie-s-proposal) \n \
+  [${proposals[lang].SAND}](${links[lang].LINK}sandrewswann-s-proposal) \n \
+  [${proposals[lang].SCAN}](${links[lang].LINK}scantron-s-proposal) \n \
+  [${proposals[lang].DJORIC}](${links[lang].LINK}djoric-dmatix-proposal) \n \
+  [${proposals[lang].ROGET}](${links[lang].LINK}roget-s-proposal) \n \
+  [${proposals[lang].OUROBOROS}](${links[lang].LINK}ouroboros) \n \
+  [${proposals[lang].KATE}](${links[lang].LINK}kate-mctiriss-s-proposal) \n \
+  [${proposals[lang].KAL}](${links[lang].LINK}kalinins-proposal) \n \
+  [${proposals[lang].WRONG}](${links[lang].LINK}wrong-proposal) \n \
+  [${proposals[lang].SHAGGY}](${links[lang].LINK}shaggydredlocks-proposal) \n \
+  [${proposals[lang].SPIKE}](${links[lang].LINK}spikebrennan-s-proposal) \n \
+  [${proposals[lang].WJS}](${links[lang].LINK}wjs-proposal) \n \
+  [${proposals[lang].BILL}](${links[lang].LINK}billiths-proposal) \n \
+  [${proposals[lang].TANHONY}](${links[lang].LINK}tanhony-s-proposal) \n \
+  [${proposals[lang].LILY}](${links[lang].LINK}lily-s-proposal) \n \
+  [${proposals[lang].TUFTOS}](${links[lang].LINK}tuftos-proposal) \n \
+  [${proposals[lang].JIM}](${links[lang].LINK}jim-north-s-proposal) \n \
+  [${proposals[lang].IHP}](${links[lang].LINK}i-h-p-proposal) \n \
+  [${proposals[lang].EX}](${links[lang].LINK}scp-001-ex) \n \
+  [${proposals[lang].WMDD}](${links[lang].LINK}wmdd-s-proposal) \n \
+  [${proposals[lang].KIRBY}](${links[lang].LINK}captain-kirby-s-proposal) \n \
+  [${proposals[lang].PEDANTIQUE}](${links[lang].LINK}pedantique-s-proposal)`
 
   var embed = new RichEmbed()
   .setTitle('001 proposals')
