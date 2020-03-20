@@ -1,19 +1,21 @@
 const { RichEmbed } = require('discord.js');
 const helpLoc = require('../localisation/help.json');
-//const helpStrings = JSON.parse(helpLoc);
+const commandLoc = require('../localisation/help.json')
 
 fetchHelp = function(page, lang, callback){
   var embed = ''
   const langStrings = helpLoc[lang]
+  const commStrings = commandLoc[lang]
+
   if (!page){
     embed = new RichEmbed()
     .setTitle(langStrings["BASE"].TITLE)
     .setAuthor('Marv')
     .setDescription(langStrings["BASE"].DESCRIP)
     .setColor(5577355)
-    .addField('scp', 'scp, tales, 001, generate')
-    .addField('moderation', 'change_prefix, kick, ban, purge')
-    .addField('other', 'help, info, ping')
+    .addField('scp', `scp, ${commStrings.TALES}, 001, ${commStrings.GENERATE}`)
+    .addField('moderation', `${commStrings.PREFIX}, ${commStrings.KICK}, ${commStrings.BAN}, ${commStrings.PURGE}`)
+    .addField('other', `${commStrings.HELP}, ${commStrings.INFO}, ${commStrings.PING}`)
 
     callback(embed)
 
