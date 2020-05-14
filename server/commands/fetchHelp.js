@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const helpLoc = require('../localisation/help.json');
-const commandLoc = require('../localisation/help.json')
+const commandLoc = require('../localisation/commands.json')
 
 fetchHelp = function(page, lang, callback){
   var embed = ''

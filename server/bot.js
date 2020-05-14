@@ -62,11 +62,11 @@ bot.on('message', async message => {
   if (settings.findOne({ _id: message.guild.id })) {
     prefix = settings.findOne({ _id: message.guild.id }).prefix
 
-    if(settings.findOne({ _id: message.guild.id }).language) {
+    /*if(settings.findOne({ _id: message.guild.id }).language) {
       lang = settings.findOne({ _id: message.guild.id }).language
     } else {
       settings.update({ _id: message.guild.id }, { $set: { language: 'en' } })
-    }
+    }*/
   }
 
   // Replies to mentions with the servers prefix
