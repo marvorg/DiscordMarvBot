@@ -180,7 +180,7 @@ bot.on('message', async message => {
 
     case commands[lang].GENERATE:
 
-      var input = message.content.split(commands[new_lang].GENERATE)[1].trim()
+      var input = message.content.split(commands[lang].GENERATE)[1].trim()
 
       var embed = shortPreProcessing(message)
       var m = await message.channel.send(embed[1])
