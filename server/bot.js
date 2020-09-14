@@ -67,6 +67,7 @@ bot.on('message', async message => {
     } else {
       settings.update({ _id: message.guild.id }, { $set: { language: 'en' } })
     }*/
+    // while translations arent done this is staying removed
   }
 
   // Replies to mentions with the servers prefix
@@ -305,7 +306,6 @@ bot.on('message', async message => {
       break
 
     default:
-      //message.channel.send('Thats not a valid command, use `help` to view commands.') <-- removed for being annoying
   }
 })
 
